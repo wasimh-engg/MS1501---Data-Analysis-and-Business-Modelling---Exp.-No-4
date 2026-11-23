@@ -39,6 +39,110 @@ The dataset used for this experiment is `fish.csv` which contains real-world phy
 | | `plt.title()`, `plt.xlabel()`, `plt.ylabel()`, `plt.legend()`, `plt.show()` | Configure titles, axis labels, legend, and display the plotted figure |
 
 ## Program & Output
+# Experiment 4: Multiple Regression Analysis (Fish Dataset)
 
+## Code
+
+```python
+# Multiple Linear Regression on the Fish Dataset
+
+# Step 1: Import required libraries
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score
+
+pd.set_option("display.max_columns", None)
+pd.set_option("display.width", 250)
+
+# Step 2: Load the dataset
+df = pd.read_csv("Fish_length.csv")
+
+# Step 3: Display the dataset and inspect its columns
+print("Dataset (first 5 rows):")
+print(df.head())
+print("\nShape:", df.shape)
+print("Columns:", list(df.columns))
+
+# Create L = mean of Length1, Length2 and Length3
+df["L"] = df[["Length1", "Length2", "Length3"]].mean(axis=1)
+
+# Step 4: Define independent (X) and dependent (Y) variables
+X = df[["L", "Height", "Width"]]
+Y = df["Weight"]
+
+# Step 5: Train the Multiple Linear Regression model
+model = LinearRegression()
+model.fit(X, Y)
+
+# Step 6: Coefficients, intercept and regression equation
+print("\nIntercept:", round(model.intercept_, 4))
+print("Coefficients:")
+for name, coef in zip(X.columns, model.coef_):
+    print(f"  {name:<7}: {coef:.4f}")
+print(f"\nRegression Equation:\nWeight = {model.intercept_:.4f} "
+      f"+ ({model.coef_[0]:.4f} x L) + ({model.coef_[1]:.4f} x Height) "
+      f"+ ({model.coef_[2]:.4f} x Width)")
+
+# Step 7: Predict Weight values
+Y_pred = model.predict(X)
+
+# Step 8: Evaluate using R-squared
+r2 = r2_score(Y, Y_pred)
+print(f"\nR-squared (R2) Score: {r2:.4f}")
+
+comparison = pd.DataFrame({"Actual": Y, "Predicted": Y_pred.round(2)})
+print("\nActual vs Predicted Weight (first 10 rows):")
+print(comparison.head(10))
+
+# Step 9: Plot actual vs predicted values
+plt.figure(figsize=(10, 5))
+plt.plot(Y.values, marker="o", color="blue", label="Actual Weight")
+plt.plot(Y_pred, marker="s", linestyle="--", color="red", label="Predicted Weight")
+plt.title("Actual vs Predicted Fish Weight (Multiple Linear Regression)",
+          fontsize=13, fontweight="bold")
+plt.xlabel("Observation Index")
+plt.ylabel("Weight (grams)")
+plt.grid(True, linestyle="--", alpha=0.5)
+plt.legend()
+plt.tight_layout()
+plt.savefig("images/actual_vs_predicted.png", dpi=150)
+plt.show()
+
+Dataset (first 5 rows):
+  Species  Weight  Length1  Length2  Length3   Height   Width
+0   Roach   259.1     25.1     27.2     29.9   8.8210  4.6136
+1   Bream   423.2     29.0     30.9     33.5  13.4218  5.6620
+2   Roach   151.1     21.4     23.2     25.2   7.2479  3.9580
+3   Perch   523.2     31.5     34.2     37.6   9.9794  5.5136
+4   Perch   355.7     27.3     29.9     32.9   8.7762  4.7713
+
+Shape: (55, 7)
+Columns: ['Species', 'Weight', 'Length1', 'Length2', 'Length3', 'Height', 'Width']
+
+Intercept: -495.3804
+Coefficients:
+  L      : 38.4414
+  Height : 25.8040
+  Width  : -107.6604
+
+Regression Equation:
+Weight = -495.3804 + (38.4414 x L) + (25.8040 x Height) + (-107.6604 x Width)
+
+R-squared (R2) Score: 0.9140
+
+Actual vs Predicted Weight (first 10 rows):
+   Actual  Predicted
+0   259.1     288.83
+1   423.2     438.19
+2   151.1     159.93
+3   523.2     492.20
+4   355.7     371.93
+5    72.9      25.27
+6    12.7    -111.18
+7   177.3     233.02
+8    15.2     -81.75
+9   573.8     538.79
 
 ## Result
