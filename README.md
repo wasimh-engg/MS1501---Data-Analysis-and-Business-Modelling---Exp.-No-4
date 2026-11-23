@@ -144,6 +144,8 @@ Actual vs Predicted Weight (first 10 rows):
 7   177.3     233.02
 8    15.2     -81.75
 9   573.8     538.79
+```
+<img width="1024" height="572" alt="image" src="https://github.com/user-attachments/assets/6ae08b24-6e26-440d-bb0e-6b50d44037ec" />
 
 ## Result
 Thus, Multiple Linear Regression on the fish dataset (Fish_length.csv) was executed successfully
